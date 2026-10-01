@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sanityImageUrl } from '~/utils/sanityImage'
 
-const { data: whatIfs, pending, error } = await useFetch('/api/what-ifs')
+const { data: whatIfs, pending, error } = useLazyFetch('/api/what-ifs')
 </script>
 
 <template>

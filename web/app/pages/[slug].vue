@@ -4,7 +4,7 @@ import { sanityImageUrl } from '~/utils/sanityImage'
 const route = useRoute()
 const slug = computed(() => String(route.params.slug ?? ''))
 const storyUrl = computed(() => `/api/what-if/${encodeURIComponent(slug.value)}`)
-const { data: story, pending, error } = await useFetch(storyUrl)
+const { data: story, pending, error } = useLazyFetch(storyUrl)
 const coverImage = computed(() => sanityImageUrl(story.value?.image, 1600))
 const activeRipple = ref(0)
 const rippleHorizons = [
