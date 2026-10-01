@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { sanityImageUrl } from '~/utils/sanityImage'
 
-const query =
-  '*[_type == "whatIf" && defined(slug.current)] | order(_createdAt desc) { _id, title, slug, summary, image }'
-const { data: whatIfs, pending, error } = await useSanityQuery(query)
+const { data: whatIfs, pending, error } = await useFetch('/api/what-ifs')
 </script>
 
 <template>
