@@ -2,10 +2,11 @@
 import { sanityImageUrl } from '~/utils/sanityImage'
 
 const route = useRoute()
+const slug = computed(() => String(route.params.slug ?? ''))
 const query =
   '*[_type == "whatIf" && slug.current == $slug][0] { _id, title, slug, summary, body, image, ripples[] { horizon, consequence } }'
-const { data: story } = await useSanityQuery(query, {
-  slug: String(route.params.slug ?? ''),
+const { data: story, pending, error } = await useSanityQuery(query, {
+  slug,
 })
 const coverImage = computed(() => sanityImageUrl(story.value?.image, 1600))
 const activeRipple = ref(0)
@@ -69,7 +70,12 @@ const selectedRipple = computed(() => rippleStages.value[activeRipple.value])
       <NuxtLink to="/" class="return-link">← Back to all questions</NuxtLink>
     </article>
 
-    <section v-else class="not-found">
+    <section v-else-if="pending" class="not-found" aria-live="polite">
+      <p class="eyebrow">LOADING THE POSSIBILITY</p>
+      <h1>Following the ripple…</h1>
+    </section>
+
+    <section v-else-if="error || !story" class="not-found">
       <p class="eyebrow">THIS QUESTION IS STILL OUT THERE</p>
       <h1>We couldn’t find that possibility.</h1>
       <NuxtLink to="/">Return to the question board →</NuxtLink>

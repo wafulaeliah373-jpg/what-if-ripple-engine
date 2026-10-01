@@ -3,7 +3,7 @@ import { sanityImageUrl } from '~/utils/sanityImage'
 
 const query =
   '*[_type == "whatIf" && defined(slug.current)] | order(_createdAt desc) { _id, title, slug, summary, image }'
-const { data: whatIfs } = await useSanityQuery(query)
+const { data: whatIfs, pending, error } = await useSanityQuery(query)
 </script>
 
 <template>
@@ -77,6 +77,24 @@ const { data: whatIfs } = await useSanityQuery(query)
             <span class="read-link">Follow the idea <span>→</span></span>
           </div>
         </NuxtLink>
+      </div>
+
+      <div v-else-if="pending" class="empty-state" aria-live="polite">
+        <div class="empty-mark">?</div>
+        <div>
+          <p class="section-label">LOADING QUESTIONS</p>
+          <h3>Gathering possibilities…</h3>
+          <p>The question board is loading.</p>
+        </div>
+      </div>
+
+      <div v-else-if="error" class="empty-state" role="status">
+        <div class="empty-mark">?</div>
+        <div>
+          <p class="section-label">THE QUESTION BOARD</p>
+          <h3>Questions could not load just now.</h3>
+          <p>Please try again in a moment.</p>
+        </div>
       </div>
 
       <div v-else class="empty-state">
